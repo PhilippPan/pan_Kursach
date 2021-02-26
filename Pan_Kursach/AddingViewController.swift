@@ -19,22 +19,29 @@ class AddingViewController: UIViewController {
     let url = "http://172.16.1.71:7004/api/Users"
     
     @IBAction func btnAdd(_ sender: UIButton) {
-        let newUser = [
+        
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd 00:00:00"
+        let res = df.string(from: txtDate.date)
+        
+        let newUser: Parameters = [
             "Login": txtLogin.text!,
             "Password": txtPassword.text!,
             "RoleID": 5,
             "UserName": txtName.text ?? "UserName",
             "UserEmail": txtEmail.text!,
-            "UserDateOfBirth": txtDate.date,
+            "UserDateOfBirth": res,
             "StatusID": 5
-        ] as [String : Any]
-        
-        AF.request(url, method: .post, parameters: newUser, encoder: JSONParameterEncoder).validate().responseJSON { response in
+        ]
+
+        AF.request(url, method: .post, parameters: newUser, encoding: JSONEncoding.default, headers: nil).validate().responseJSON { response in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
                 print("JSON: \(json)")
             case .failure(let error):
+                let alert = UIAlertController(title: "Alert", message: "Message",preferredStyle: .alert)
+                alert.present(alert, animated: true)
                 print(error)
             }
         }
