@@ -39,11 +39,18 @@ class AddingViewController: UIViewController {
             case .success(let value):
                 let json = JSON(value)
                 print("JSON: \(json)")
+                showAlert(message: "User was added", title: "Success")
             case .failure(let error):
-                let alert = UIAlertController(title: "Alert", message: "Message",preferredStyle: .alert)
-                alert.present(alert, animated: true)
-                print(error)
+                var errorJ = JSON(response.data)
+//                var errorD = errorJ["error"].stringValue
+                showAlert(message: "Wrong data", title: "Error")
+                print(errorJ)
             }
+        }
+        func showAlert(message: String, title: String) {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
         }
     }
     
